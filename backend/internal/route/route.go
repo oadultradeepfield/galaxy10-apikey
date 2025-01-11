@@ -32,12 +32,9 @@ func InitRoutes(r *gin.Engine, db *gorm.DB) {
 	protected := r.Group("/api")
 	protected.Use(middleware.JWTMiddleware(db))
 	{
-		apikey := protected.Group("/apikeys")
+		apikey := protected.Group("/apikey")
 		{
-			apikey.GET("/", apiKeyController.GetAllAPIKeys)
-			apikey.POST("/", apiKeyController.CreateAPIKey)
-			apikey.PUT("/:id", apiKeyController.UpdateAPIKey)
-			apikey.DELETE("/:id", apiKeyController.DeleteAPIKey)
+			apikey.GET("/", apiKeyController.GetOrCreateAPIKey)
 		}
 
 		user := protected.Group("/user")

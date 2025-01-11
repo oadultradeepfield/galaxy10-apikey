@@ -1,25 +1,65 @@
 package apikey
 
 import (
+	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/model"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/service"
+	"gorm.io/gorm"
 )
 
-func (ctrl *APIKeyController) GetAllAPIKeys(c *gin.Context) {
+func (ctrl *APIKeyController) GetOrCreateAPIKey(c *gin.Context) {
 	currentUser, err := service.GetCurrentUser(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	var apiKeys []model.APIKey
-	if err := ctrl.db.Where("user_id = ?", currentUser.ID).Find(&apiKeys).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch api keys"})
+	var apiKey model.APIKey
+	if err := ctrl.db.Where("user_id = ?", currentUser.ID).First(&apiKey).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			uniqueKey := uuid.New().String()
+
+			apiKey = model.APIKey{
+				ID:        uuid.New().String(),
+				APIKey:    uniqueKey,
+				UserID:    currentUser.ID,
+				ExpiredAt: time.Now().Add(15 * 24 * time.Hour),
+			}
+
+			if err := ctrl.db.Create(&apiKey).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create api key"})
+				return
+			}
+
+			c.JSON(http.StatusCreated, gin.H{"data": apiKey})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch api key"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": apiKeys})
+	if isExpired(apiKey) {
+		apiKey.APIKey = uuid.New().String()
+		apiKey.ExpiredAt = time.Now().Add(15 * 24 * time.Hour)
+
+		if err := ctrl.db.Save(&apiKey).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update api key"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"data": apiKey})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": apiKey})
+}
+
+func isExpired(apiKey model.APIKey) bool {
+	return apiKey.ExpiredAt.Before(time.Now())
 }
