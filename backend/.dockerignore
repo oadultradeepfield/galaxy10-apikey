@@ -1,0 +1,13 @@
+# Directories to exclude
+vendor/
+tests/
+tmp/
+
+# System files
+*.DS_Store
+
+# Dockerfile
+Dockerfile
+
+# Environment variables
+.env
