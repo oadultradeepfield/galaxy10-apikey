@@ -11,9 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/middleware"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/model"
+	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/service"
 	"golang.org/x/oauth2"
 )
 
@@ -86,7 +86,7 @@ func (ctrl *AuthController) createOrUpdateUser(userInfo *struct {
 	var user model.User
 	if err := ctrl.db.Where("email = ?", userInfo.Email).First(&user).Error; err != nil {
 		user = model.User{
-			ID:        uuid.New().String(),
+			ID:        service.GenerateRandomAlphaString(64),
 			Username:  userInfo.Name,
 			Email:     userInfo.Email,
 			CreatedAt: time.Now(),
@@ -106,7 +106,7 @@ func (ctrl *AuthController) generateToken(userID string) (string, error) {
 	}
 
 	claims := &middleware.CustomClaims{
-		UserID: userID,
+		ID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

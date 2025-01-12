@@ -13,7 +13,7 @@ import (
 )
 
 type CustomClaims struct {
-	UserID string `json:"user_id"`
+	ID string `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -54,12 +54,8 @@ func JWTMiddleware(db *gorm.DB) gin.HandlerFunc {
 		}
 
 		var user model.User
-		if err := db.First(&user, claims.UserID).Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				c.JSON(http.StatusUnauthorized, gin.H{"error": "user not found"})
-			} else {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "database error"})
-			}
+		if err := db.Where("id = ?", claims.ID).First(&user).Error; err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not found"})
 			c.Abort()
 			return
 		}

@@ -16,7 +16,7 @@ func (ctrl *UserController) GetCurrentUserInfo(c *gin.Context) {
 	}
 
 	var user model.User
-	if err := ctrl.db.Where("user_id = ?", currentUser.ID).First(&user).Error; err != nil {
+	if err := ctrl.db.Where("id = ?", currentUser.ID).First(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch current user information"})
 		return
 	}

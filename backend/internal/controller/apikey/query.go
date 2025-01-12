@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/model"
 	"github.com/oadultradeepfield/galaxy10-apikey/backend/internal/service"
 	"gorm.io/gorm"
@@ -20,12 +19,12 @@ func (ctrl *APIKeyController) GetOrCreateAPIKey(c *gin.Context) {
 	}
 
 	var apiKey model.APIKey
-	if err := ctrl.db.Where("user_id = ?", currentUser.ID).First(&apiKey).Error; err != nil {
+	if err := ctrl.db.Where("id = ?", currentUser.ID).First(&apiKey).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			uniqueKey := uuid.New().String()
+			uniqueKey := service.GenerateRandomAlphaString(64)
 
 			apiKey = model.APIKey{
-				ID:        uuid.New().String(),
+				ID:        service.GenerateRandomAlphaString(64),
 				APIKey:    uniqueKey,
 				UserID:    currentUser.ID,
 				ExpiredAt: time.Now().Add(15 * 24 * time.Hour),
@@ -45,7 +44,7 @@ func (ctrl *APIKeyController) GetOrCreateAPIKey(c *gin.Context) {
 	}
 
 	if isExpired(apiKey) {
-		apiKey.APIKey = uuid.New().String()
+		apiKey.APIKey = service.GenerateRandomAlphaString(64)
 		apiKey.ExpiredAt = time.Now().Add(15 * 24 * time.Hour)
 
 		if err := ctrl.db.Save(&apiKey).Error; err != nil {
