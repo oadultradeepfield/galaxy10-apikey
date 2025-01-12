@@ -44,10 +44,11 @@ To run the frontend locally:
 
 The backend is containerized with Docker. For local development, you can use the provided `Dockerfile.dev`, which includes configurations for live reloading.
 
-1. Build the Docker image using the development Dockerfile:
+1. Navigate to the `backend` directory and build the Docker image using the development Dockerfile:
 
    ```bash
-   docker build -f backend/Dockerfile.dev -t galaxy10-apikey:latest .
+   cd backend
+   docker build -f Dockerfile.dev -t galaxy10-apikey:latest .
    ```
 
 2. Run the container with volume mounting and environment variable support:
