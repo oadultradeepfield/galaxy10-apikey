@@ -59,7 +59,7 @@ const Home = () => {
         left: 0,
       }}
     >
-      {username ? <Panel /> : <SignIn />}
+      {username ? <Panel username={username} token={token} /> : <SignIn />}
     </Box>
   );
 };

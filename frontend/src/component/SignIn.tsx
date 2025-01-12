@@ -13,7 +13,7 @@ const SignIn = () => {
     <Card
       elevation={24}
       sx={{
-        maxWidth: 475,
+        maxWidth: 480,
         p: 3,
         m: 3,
       }}
@@ -46,7 +46,7 @@ const SignIn = () => {
           <Typography fontWeight={500}>Get Started</Typography>
         </Button>
         <Button
-          href="https://github.com/oadultradeepfield/galaxy10-anomaly-detection"
+          href="https://github.com/oadultradeepfield/galaxy10-anomaly-detection?tab=readme-ov-file#updates"
           target="_blank"
           variant="outlined"
           size="large"
