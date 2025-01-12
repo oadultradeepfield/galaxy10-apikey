@@ -19,7 +19,7 @@ func (ctrl *APIKeyController) GetOrCreateAPIKey(c *gin.Context) {
 	}
 
 	var apiKey model.APIKey
-	if err := ctrl.db.Where("id = ?", currentUser.ID).First(&apiKey).Error; err != nil {
+	if err := ctrl.db.Where("user_id = ?", currentUser.ID).First(&apiKey).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			uniqueKey := service.GenerateRandomAlphaString(64)
 
