@@ -53,17 +53,20 @@ const Panel: React.FC<PanelProps> = ({ username, token }) => {
         )}
       </CardContent>
 
-      <CardActions sx={{ gap: 1 }}>
-        <Button variant="contained" size="large" onClick={handleSignOut}>
-          <Typography fontWeight={500}>Sign Out</Typography>
+      <CardActions>
+        <Button variant="contained" onClick={handleSignOut}>
+          <Typography variant="body2" fontWeight={500}>
+            Sign Out
+          </Typography>
         </Button>
         <Button
           href="https://github.com/oadultradeepfield/galaxy10-anomaly-detection?tab=readme-ov-file#updates"
           target="_blank"
           variant="outlined"
-          size="large"
         >
-          <Typography fontWeight={500}>Learn More</Typography>
+          <Typography variant="body2" fontWeight={500}>
+            Learn More
+          </Typography>
         </Button>
       </CardActions>
     </Card>

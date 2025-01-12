@@ -41,17 +41,20 @@ const SignIn = () => {
           Autoencoders trained on the Galaxy10 DECals Dataset.
         </Typography>
       </CardContent>
-      <CardActions sx={{ gap: 1 }}>
-        <Button href={googleOauthUrl} variant="contained" size="large">
-          <Typography fontWeight={500}>Get Started</Typography>
+      <CardActions>
+        <Button href={googleOauthUrl} variant="contained">
+          <Typography variant="body2" fontWeight={500}>
+            Get Started
+          </Typography>
         </Button>
         <Button
           href="https://github.com/oadultradeepfield/galaxy10-anomaly-detection?tab=readme-ov-file#updates"
           target="_blank"
           variant="outlined"
-          size="large"
         >
-          <Typography fontWeight={500}>Learn More</Typography>
+          <Typography variant="body2" fontWeight={500}>
+            Learn More
+          </Typography>
         </Button>
       </CardActions>
     </Card>
