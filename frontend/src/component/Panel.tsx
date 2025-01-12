@@ -14,6 +14,10 @@ interface PanelProps {
 
 const Panel: React.FC<PanelProps> = ({ username, token }) => {
   const { apikey, expiredAt, loading } = useGetAPIKey(token);
+  const handleSignOut = () => {
+    localStorage.removeItem("galaxy10apiKeyAccessToken");
+    window.location.reload();
+  };
 
   return (
     <Card
@@ -50,7 +54,7 @@ const Panel: React.FC<PanelProps> = ({ username, token }) => {
       </CardContent>
 
       <CardActions sx={{ gap: 1 }}>
-        <Button variant="contained" size="large">
+        <Button variant="contained" size="large" onClick={handleSignOut}>
           <Typography fontWeight={500}>Sign Out</Typography>
         </Button>
         <Button

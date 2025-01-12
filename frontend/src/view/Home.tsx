@@ -27,6 +27,7 @@ const Home = () => {
           );
 
           setToken(tokenFromUrl);
+          window.location.reload();
         }
       } catch (error) {
         console.error(error);
